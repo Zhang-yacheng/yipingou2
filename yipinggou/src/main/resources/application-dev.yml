@@ -1,0 +1,113 @@
+server:
+  port: 8010
+spring:
+  application:
+    name: yipinggou
+  jackson:
+    #日期格式化
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    primary:
+      jdbc-url: jdbc:mysql://192.168.1.119:3306/yipinggou?characterEncoding=UTF-8&useSSL=false&&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: 123456
+      hikari:
+        initial-size: 10
+        max-active: 100
+        min-idle: 10
+        max-wait: 60000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 20
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: SELECT 1 FROM DUAL
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        stat-view-servlet:
+          enabled: true
+          url-pattern: /druid/*
+            #login-username: admin
+          #login-password: admin
+        filter:
+          stat:
+            log-slow-sql: true
+            slow-sql-millis: 1000
+            merge-sql: true
+          wall:
+            config:
+              multi-statement-allow: true
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    initialSize: 5
+    minIdle: 5
+    maxActive: 10000
+    connection-timeout: 30000
+    default-statement-timeout: 30
+    #配置获取连接等待超时的时间
+    maxWait: 60000
+    #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 600000
+    #配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    #验证连接是否有效。此参数必须设置为非空字符串
+    validationQuery: SELECT 1
+    #在连接初始化时执行连接可用性检查
+    testOnConnect: true
+    #指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+    testWhileIdle: true
+    #指明是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
+    testOnBorrow: true
+    #指明是否在归还到池中前进行检验
+    testOnReturn: false
+    #打开后，增强timeBetweenEvictionRunsMillis的周期性连接检查，minIdle内的空闲连接，每次检查强制验证连接有效性.
+    keepAlive: true
+    #连接泄露检查，打开removeAbandoned功能 , 连接从连接池借出后，长时间不归还，将触发强制回连接。回收周期随timeBetweenEvictionRunsMillis进行，如果连接为从连接池借出状态，并且未执行任何sql，并且从借出时间起已超过removeAbandonedTimeout时间，则强制归还连接到连接池中。
+    removeAbandoned: true
+    #超时时间，秒
+    removeAbandonedTimeout: 80
+    #关闭abanded连接时输出错误日志，这样出现连接泄露时可以通过错误日志定位忘记关闭连接的位置
+    logAbandoned: true
+    #打开PSCache，并且指定每个连接上PSCache的大小，Oracle等支持游标的数据库，打开此开关，会以数量级提升性能，具体查阅PSCache相关资料
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,log4j
+    #通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000;druid.stat.logSlowSql=true
+    #合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+  jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      main-dialect: org.hibernate.dialect.MySQL5Dialect
+      second-dialect: org.hibernate.dialect.SQLServer2012Dialect
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  redis:
+    database: 2
+    port: 6379
+    host: 192.168.1.119
+    #    host: 192.168.0.133
+    jedis:
+      pool:
+        #最大连接数
+        max-active: 200
+        #最大阻塞等待时间(负数表示没限制)
+        #最大空闲
+        max-idle: 8
+        #最小空闲
+        min-idle: 0
+        max-wait: -1ms
+      #连接超时时间
+    timeout: 10000ms
+upload:
+  urlRoot: /upload
+  realPath: /usr/local/upload/
